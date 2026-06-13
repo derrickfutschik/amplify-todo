@@ -1,0 +1,44 @@
+version: 1
+applications:
+  # ── Platform backend ─────────────────────────────────────────────────────────
+  # Stable resources: auth, shared infra. Deploy from main/release ONLY.
+  # In the Amplify console: New app → appRoot = packages/platform-backend
+  - appRoot: packages/platform-backend
+    backend:
+      phases:
+        build:
+          commands:
+            - npm ci
+
+  # ── Feature backend ──────────────────────────────────────────────────────────
+  # Per-feature resources: data models, functions. Deploy from any branch.
+  # In the Amplify console: New app → appRoot = packages/feature-backend
+  # Set env var PLATFORM_APP_ID to the Amplify App ID of the platform backend.
+  - appRoot: packages/feature-backend
+    backend:
+      phases:
+        build:
+          commands:
+            - npm ci
+
+  # ── Frontend ─────────────────────────────────────────────────────────────────
+  # In the Amplify console: New app → appRoot = apps/todo-app
+  # Set env var FEATURE_APP_ID to the Amplify App ID of the feature backend.
+  - appRoot: apps/todo-app
+    frontend:
+      phases:
+        preBuild:
+          commands:
+            - npm ci
+            # Pull feature backend outputs (includes auth + data config)
+            - npx ampx generate outputs --branch $AWS_BRANCH --app-id $FEATURE_APP_ID --out-dir ../../packages/feature-backend
+        build:
+          commands:
+            - npm run build -w apps/todo-app
+      artifacts:
+        baseDirectory: apps/todo-app/dist
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - node_modules/**/*

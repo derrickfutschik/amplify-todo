@@ -1,0 +1,28 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build", "generate-outputs"],
+      "outputs": ["dist/**"]
+    },
+    "dev": {
+      "dependsOn": ["^generate-outputs"],
+      "cache": false,
+      "persistent": true
+    },
+    "sandbox": {
+      "cache": false,
+      "persistent": true,
+      "outputs": ["amplify_outputs.json"]
+    },
+    "generate-outputs": {
+      "cache": false,
+      "outputs": ["amplify_outputs.json"]
+    },
+    "preview": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "persistent": true
+    }
+  }
+}

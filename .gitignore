@@ -1,0 +1,9 @@
+node_modules
+dist
+.turbo
+.env
+.env.local
+
+# Amplify — commit amplify_outputs.json so CI/CD can consume it;
+# remove from gitignore if you prefer to generate it fresh on every build.
+# amplify_outputs.json
