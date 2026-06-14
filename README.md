@@ -76,8 +76,9 @@ npm install
 ### 2 — Start the backend sandbox
 
 The sandbox provisions your backend resources in your personal AWS account and writes
-`packages/todo-backend/amplify_outputs.json`. It watches for file changes and
-hot-reloads the backend automatically. **Leave this running in a dedicated terminal.**
+`packages/todo-backend/amplify_outputs.json` (gitignored — never commit it). It watches
+for file changes and hot-reloads the backend automatically. **Leave this running in a
+dedicated terminal.**
 
 ```bash
 # npm
@@ -228,6 +229,10 @@ Create **three separate apps** in the [Amplify Console](https://console.aws.amaz
    backend config before the React build starts.
 
 ### Pulling outputs manually (point local dev at a deployed branch)
+
+`amplify_outputs.json` is gitignored and never committed. It is always generated —
+either by the sandbox for local dev, or by `ampx generate outputs` in CI. To point
+your local frontend at a deployed branch instead of a sandbox:
 
 ```bash
 npx ampx generate outputs \
