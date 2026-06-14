@@ -1,10 +1,10 @@
 {
-  "name": "@amplify-todo/platform-backend",
+  "name": "@amplify-todo/platform",
   "version": "1.0.0",
   "type": "module",
   "scripts": {
     "sandbox": "ampx sandbox",
-    "sandbox:reset": "ampx sandbox --reset",
+    "sandbox:delete": "ampx sandbox delete",
     "generate-outputs": "ampx generate outputs"
   },
   "exports": {

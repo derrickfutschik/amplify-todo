@@ -1,14 +1,14 @@
 {
-  "name": "@amplify-todo/feature-backend",
+  "name": "@amplify-todo/todo-backend",
   "version": "1.0.0",
   "type": "module",
   "scripts": {
     "sandbox": "ampx sandbox",
-    "sandbox:reset": "ampx sandbox --reset",
+    "sandbox:delete": "ampx sandbox delete",
     "generate-outputs": "ampx generate outputs"
   },
   "dependencies": {
-    "@amplify-todo/platform-backend": "*",
+    "@amplify-todo/platform": "*",
     "aws-cdk-lib": "^2.152.0",
     "constructs": "^10.0.0"
   },

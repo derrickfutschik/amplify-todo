@@ -1,20 +1,19 @@
 version: 1
 applications:
-  # ── Platform backend ─────────────────────────────────────────────────────────
-  # Stable resources: auth, shared infra. Deploy from main/release ONLY.
-  # In the Amplify console: New app → appRoot = packages/platform-backend
-  - appRoot: packages/platform-backend
+  # ── Platform (auth, shared infra) ────────────────────────────────────────────
+  # Stable resources. Deploy from main/release ONLY.
+  # In the Amplify console: New app → appRoot = packages/platform
+  - appRoot: packages/platform
     backend:
       phases:
         build:
           commands:
             - npm ci
 
-  # ── Feature backend ──────────────────────────────────────────────────────────
-  # Per-feature resources: data models, functions. Deploy from any branch.
-  # In the Amplify console: New app → appRoot = packages/feature-backend
-  # Set env var PLATFORM_APP_ID to the Amplify App ID of the platform backend.
-  - appRoot: packages/feature-backend
+  # ── Todo backend (data models) ───────────────────────────────────────────────
+  # Per-feature resources. Deploy from any branch.
+  # In the Amplify console: New app → appRoot = packages/todo-backend
+  - appRoot: packages/todo-backend
     backend:
       phases:
         build:
@@ -23,15 +22,15 @@ applications:
 
   # ── Frontend ─────────────────────────────────────────────────────────────────
   # In the Amplify console: New app → appRoot = apps/todo-app
-  # Set env var FEATURE_APP_ID to the Amplify App ID of the feature backend.
+  # Set env var TODO_BACKEND_APP_ID to the Amplify App ID of the todo-backend app.
   - appRoot: apps/todo-app
     frontend:
       phases:
         preBuild:
           commands:
             - npm ci
-            # Pull feature backend outputs (includes auth + data config)
-            - npx ampx generate outputs --branch $AWS_BRANCH --app-id $FEATURE_APP_ID --out-dir ../../packages/feature-backend
+            # Pull todo-backend outputs (includes auth + data config)
+            - npx ampx generate outputs --branch $AWS_BRANCH --app-id $TODO_BACKEND_APP_ID --out-dir ../../packages/todo-backend
         build:
           commands:
             - npm run build -w apps/todo-app

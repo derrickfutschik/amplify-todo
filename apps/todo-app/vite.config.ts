@@ -6,8 +6,8 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@platform-backend': path.resolve(__dirname, '../../packages/platform-backend'),
-      '@feature-backend': path.resolve(__dirname, '../../packages/feature-backend'),
+      '@platform': path.resolve(__dirname, '../../packages/platform'),
+      '@todo-backend': path.resolve(__dirname, '../../packages/todo-backend'),
     },
   },
 });

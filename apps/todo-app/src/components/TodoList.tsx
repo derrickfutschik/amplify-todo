@@ -32,7 +32,7 @@ function TodoList({ client }: Props) {
     setNewContent('');
   }
 
-  async function toggleDone(id: string, current: boolean | null) {
+  async function toggleDone(id: string, current: boolean | null | undefined) {
     await client.models.Todo.update({ id, done: !current });
   }
 

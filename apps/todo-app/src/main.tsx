@@ -5,9 +5,9 @@ import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import App from './App';
 
-// feature-backend outputs include both auth (from platform-backend) and data.
-// Run `npm run sandbox -w packages/feature-backend` to generate this file.
-import outputs from '@feature-backend/amplify_outputs.json';
+// todo-backend outputs include both auth (from platform) and data.
+// Run `npm run sandbox:todo` to generate this file.
+import outputs from '@todo-backend/amplify_outputs.json';
 
 Amplify.configure(outputs);
 

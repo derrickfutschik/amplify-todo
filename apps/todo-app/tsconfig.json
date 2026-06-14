@@ -16,8 +16,8 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@platform-backend/*": ["../../packages/platform-backend/*"],
-      "@feature-backend/*": ["../../packages/feature-backend/*"]
+      "@platform/*": ["../../packages/platform/*"],
+      "@todo-backend/*": ["../../packages/todo-backend/*"]
     }
   },
   "include": ["src"],

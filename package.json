@@ -9,13 +9,12 @@
     "dev": "turbo dev --filter=@amplify-todo/todo-app",
     "build": "turbo build --filter=@amplify-todo/todo-app",
     "preview": "turbo preview --filter=@amplify-todo/todo-app",
-    "sandbox:platform": "turbo sandbox --filter=@amplify-todo/platform-backend",
-    "sandbox:feature": "turbo sandbox --filter=@amplify-todo/feature-backend",
-    "generate-outputs:platform": "turbo generate-outputs --filter=@amplify-todo/platform-backend",
-    "generate-outputs:feature": "turbo generate-outputs --filter=@amplify-todo/feature-backend"
+    "sandbox:platform": "turbo sandbox --filter=@amplify-todo/platform",
+    "sandbox:todo": "turbo sandbox --filter=@amplify-todo/todo-backend",
+    "generate-outputs:platform": "turbo generate-outputs --filter=@amplify-todo/platform",
+    "generate-outputs:todo": "turbo generate-outputs --filter=@amplify-todo/todo-backend"
   },
   "devDependencies": {
     "turbo": "^2.3.0"
-  },
-  "packageManager": "pnpm@9.0.0"
+  }
 }

@@ -1,6 +1,8 @@
 # amplify-todo
 
-A full-stack todo app built with AWS Amplify Gen 2, structured as a multi-module monorepo. The backend is split into two distinct layers to model real-world branching strategies.
+A full-stack todo app built with AWS Amplify Gen 2, structured as a multi-module monorepo. The backend is split into two layers so stable shared infrastructure (auth) is never touched during feature work.
+
+---
 
 ## Monorepo layout
 
@@ -16,110 +18,233 @@ amplify-todo/
 │               └── TodoList.tsx
 │
 ├── packages/
-│   ├── platform-backend/            # ★ STABLE — deploy from main/release only
+│   ├── platform/                    # ★ STABLE — deploy from main/release only
 │   │   └── amplify/
-│   │       ├── auth/resource.ts     # Cognito User Pool (shared across all features)
+│   │       ├── auth/resource.ts     # Cognito User Pool shared across all features
 │   │       └── backend.ts
 │   │
-│   └── feature-backend/             # ★ PER-FEATURE — deploy from any branch
+│   └── todo-backend/                # ★ PER-FEATURE — deploy from any branch
 │       └── amplify/
 │           ├── data/resource.ts     # Todo data model (evolves per feature)
-│           └── backend.ts           # Imports auth from platform-backend
+│           └── backend.ts           # Imports auth from platform
 │
-├── turbo.json                        # Task pipeline with proper dependency graph
-├── pnpm-workspace.yaml               # pnpm workspace definition
-├── package.json                      # npm workspaces + root scripts
-└── amplify.yml                       # Amplify CI/CD build config (3 apps)
+├── turbo.json                       # Task pipeline with dependency graph
+├── pnpm-workspace.yaml              # pnpm workspace definition
+├── package.json                     # npm workspaces + root scripts
+└── amplify.yml                      # Amplify CI/CD build config (3 apps)
 ```
 
 ---
 
 ## Platform vs feature resources
 
-| | `packages/platform-backend` | `packages/feature-backend` |
+| | `packages/platform` | `packages/todo-backend` |
 |---|---|---|
 | **What lives here** | Auth (Cognito), shared storage, VPC | Data models, Lambda functions, feature flags |
 | **When to deploy** | `main` / `release` branches only | Any branch — including feature branches |
-| **Change frequency** | Rare — breaking auth changes are carefully coordinated | Frequent — iterate on schema and business logic freely |
-| **Amplify Console app** | One app, locked to `main` branch | One app per environment / branch |
+| **Change frequency** | Rare — coordinate carefully | Frequent — iterate freely |
+| **Amplify Console app** | One app, locked to `main` | One app, deploys every branch |
 
-The `feature-backend` imports the `auth` resource definition from `platform-backend` so data authorization always targets the same Cognito user pool, regardless of which branch is being deployed.
+`todo-backend` imports the `auth` definition from `platform` so the data API always authorizes against the same Cognito user pool, regardless of which branch is active.
 
 ---
 
 ## Prerequisites
 
 - Node.js 18+
-- An AWS account configured (`aws configure` or env vars)
+- AWS account with credentials configured (`aws configure` or env vars)
 - pnpm 9+ **or** npm 10+
-- Optional global: `turbo` (`npm i -g turbo`)
+- Optional global install: `npm i -g turbo`
 
 ---
 
-## Local development
+## Running locally
 
-### 1 — Install dependencies
+### 1 — Clone and install
 
 ```bash
+git clone <your-repo-url>
+cd amplify-todo
+
 # pnpm (recommended)
 pnpm install
 
-# npm
+# or npm
 npm install
 ```
 
-### 2 — Start the sandbox
+### 2 — Start the backend sandbox
 
-The sandbox deploys your backend into a personal cloud environment and writes
-`packages/feature-backend/amplify_outputs.json`. Leave it running — it watches
-for changes to your Amplify files.
+The sandbox provisions your backend resources in your personal AWS account and writes
+`packages/todo-backend/amplify_outputs.json`. It watches for file changes and
+hot-reloads the backend automatically. **Leave this running in a dedicated terminal.**
 
 ```bash
-# turbo
-turbo sandbox --filter=@amplify-todo/feature-backend
-
-# npm workspace
-npm run sandbox:feature
+# npm
+npm run sandbox:todo
 
 # pnpm
-pnpm --filter @amplify-todo/feature-backend sandbox
+pnpm --filter @amplify-todo/todo-backend sandbox
 
-# directly
-cd packages/feature-backend && npx ampx sandbox
+# turbo
+turbo sandbox --filter=@amplify-todo/todo-backend
+
+# or run directly
+cd packages/todo-backend && npx ampx sandbox
 ```
 
-> **Note:** To work on platform resources (auth), run the platform sandbox instead:
+The first run takes ~3–5 minutes to provision resources. Subsequent starts are faster.
+
+> **Working on auth?** Run the platform sandbox instead:
 > ```bash
 > npm run sandbox:platform
-> # or: cd packages/platform-backend && npx ampx sandbox
+> # or: cd packages/platform && npx ampx sandbox
 > ```
 
-### 3 — Start the dev server
+### 3 — Start the frontend dev server
 
-In a separate terminal:
+In a **second terminal**, once the sandbox has written `amplify_outputs.json`:
 
 ```bash
-# turbo
-turbo dev --filter=@amplify-todo/todo-app
-
 # npm
 npm run dev
 
 # pnpm
 pnpm --filter @amplify-todo/todo-app dev
+
+# turbo
+turbo dev --filter=@amplify-todo/todo-app
 ```
 
-App runs at **http://localhost:5173**.
+App runs at **http://localhost:5173**. Sign up with any email address to start using it.
+
+### 4 — Stop the sandbox when done
+
+Press `Ctrl+C` in the sandbox terminal. To also delete the provisioned AWS resources:
+
+```bash
+# npm
+npm run sandbox:todo -- delete
+
+# directly
+cd packages/todo-backend && npx ampx sandbox delete
+```
 
 ---
 
-## Building for production
+## Feature branch workflow
+
+This is the day-to-day flow for adding a new feature.
+
+### 1 — Create a branch
 
 ```bash
-# turbo (runs generate-outputs first if needed)
+git checkout -b feature/my-feature
+```
+
+### 2 — Develop locally with the sandbox
+
+Start the sandbox as described above — it creates an isolated cloud environment
+for your branch automatically.
+
+Make changes to `packages/todo-backend/amplify/data/resource.ts` (or any feature
+resource) and the sandbox hot-reloads the backend. Make changes to `apps/todo-app/src`
+and Vite hot-reloads the frontend.
+
+### 3 — Push and open a pull request
+
+```bash
+git add -A
+git commit -m "feat: describe your change"
+git push -u origin feature/my-feature
+```
+
+Opening a PR triggers Amplify CI automatically:
+- **todo-backend app** — deploys a branch environment with your data schema changes
+- **todo-app (frontend)** — builds against that branch environment and publishes a preview URL
+
+The **platform app** is not triggered (it is locked to `main` only), so auth is untouched.
+
+### 4 — Review the preview URL
+
+The Amplify Console posts a preview URL as a PR status check. Share it with reviewers
+to test the full stack in the cloud without merging.
+
+### 5 — Merge to main
+
+```bash
+# via GitHub/GitLab UI, or:
+git checkout main
+git merge feature/my-feature
+git push
+```
+
+Merging triggers:
+- **platform app** — redeploys only if `packages/platform/**` changed
+- **todo-backend app** — redeploys the `main` branch environment
+- **todo-app (frontend)** — rebuilds against the updated `main` backend
+
+Amplify automatically deletes the feature branch environment once the branch is merged.
+
+---
+
+## Deploying to AWS Amplify (first-time setup)
+
+Create **three separate apps** in the [Amplify Console](https://console.aws.amazon.com/amplify).
+
+### App 1 — Platform (auth)
+
+1. **New app → Host web app** → connect your repo
+2. Select the `main` branch
+3. Under **Monorepo settings**, tick **"My app is a monorepo"** and set the app root to:
+   ```
+   packages/platform
+   ```
+4. Deploy. In **Branch settings**, restrict future deployments to `main` only.
+5. Copy the **App ID** from the console (e.g. `d1abc123xyz`).
+
+### App 2 — Todo backend (data)
+
+1. **New app → Host web app** → same repo
+2. Select `main` (Amplify will auto-connect future branches as they are pushed)
+3. Monorepo app root:
+   ```
+   packages/todo-backend
+   ```
+4. Deploy. Copy the **App ID** — you'll use it as `TODO_BACKEND_APP_ID` in App 3.
+
+### App 3 — Frontend
+
+1. **New app → Host web app** → same repo
+2. Monorepo app root:
+   ```
+   apps/todo-app
+   ```
+3. Under **Environment variables**, add:
+   ```
+   TODO_BACKEND_APP_ID = <App ID from App 2>
+   ```
+4. Deploy. The `preBuild` step in `amplify.yml` runs `ampx generate outputs` to pull the
+   backend config before the React build starts.
+
+### Pulling outputs manually (point local dev at a deployed branch)
+
+```bash
+npx ampx generate outputs \
+  --branch main \
+  --app-id <TODO_BACKEND_APP_ID> \
+  --out-dir packages/todo-backend
+```
+
+---
+
+## Building for production locally
+
+```bash
+# turbo
 turbo build
 
-# npm workspace
+# npm
 npm run build
 
 # pnpm
@@ -130,57 +255,18 @@ Output: `apps/todo-app/dist/`
 
 ---
 
-## Deploying to AWS Amplify
-
-Create **three separate apps** in the [Amplify Console](https://console.aws.amazon.com/amplify) — one per package root.
-
-### App 1 — Platform backend (deploy from `main` only)
-
-1. New app → connect repo → set **App root** to `packages/platform-backend`.
-2. Amplify discovers `amplify/backend.ts` and deploys auth.
-3. In **Branch settings**, restrict deployments to the `main` branch.
-4. Note the **App ID** (needed for App 3).
-
-### App 2 — Feature backend (deploy from any branch)
-
-1. New app → connect repo → set **App root** to `packages/feature-backend`.
-2. Amplify deploys auth + data on every branch push.
-3. Note the **App ID** (needed for App 3).
-
-### App 3 — Frontend
-
-1. New app → connect repo → set **App root** to `apps/todo-app`.
-2. Add environment variable **`FEATURE_APP_ID`** = the App ID from App 2.
-3. Amplify runs `npx ampx generate outputs` to pull backend config, then builds the React app.
-
-The `amplify.yml` at the repo root defines the build phases for all three apps.
-
-### Pulling outputs from a deployed branch manually
-
-```bash
-npx ampx generate outputs \
-  --branch main \
-  --app-id <FEATURE_APP_ID> \
-  --out-dir packages/feature-backend
-```
-
----
-
 ## Turbo task graph
-
-Tasks are ordered so that backend outputs exist before the frontend builds or starts.
 
 | Task | Depends on | Cached | Notes |
 |---|---|---|---|
-| `build` | `^build`, `generate-outputs` | Yes | Builds all packages in order |
-| `dev` | `^generate-outputs` | No (persistent) | Starts Vite dev server |
+| `build` | `^build`, `generate-outputs` | Yes | Builds packages in dependency order |
+| `dev` | `^generate-outputs` | No (persistent) | Vite dev server |
 | `sandbox` | — | No (persistent) | Deploys + watches backend |
 | `generate-outputs` | — | No | Writes `amplify_outputs.json` |
-| `preview` | `build` | No (persistent) | Serves production build locally |
+| `preview` | `build` | No (persistent) | Serves the production build locally |
 
-The `^` prefix means "run this task in all upstream packages first." So `build` in
-`todo-app` won't start until `generate-outputs` completes in the backend packages it
-depends on.
+`^` means "run in all upstream packages first" — so `todo-app#build` waits for
+`generate-outputs` to complete in `todo-backend` before starting.
 
 ---
 
@@ -191,6 +277,8 @@ depends on.
 | Install | `npm install` | `pnpm install` | — |
 | Dev server | `npm run dev` | `pnpm --filter @amplify-todo/todo-app dev` | `turbo dev` |
 | Build | `npm run build` | `pnpm --filter @amplify-todo/todo-app build` | `turbo build` |
-| Feature sandbox | `npm run sandbox:feature` | `pnpm --filter @amplify-todo/feature-backend sandbox` | `turbo sandbox --filter=@amplify-todo/feature-backend` |
-| Platform sandbox | `npm run sandbox:platform` | `pnpm --filter @amplify-todo/platform-backend sandbox` | `turbo sandbox --filter=@amplify-todo/platform-backend` |
-| Feature outputs | `npm run generate-outputs:feature` | `pnpm --filter @amplify-todo/feature-backend generate-outputs` | `turbo generate-outputs --filter=@amplify-todo/feature-backend` |
+| Todo sandbox | `npm run sandbox:todo` | `pnpm --filter @amplify-todo/todo-backend sandbox` | `turbo sandbox --filter=@amplify-todo/todo-backend` |
+| Platform sandbox | `npm run sandbox:platform` | `pnpm --filter @amplify-todo/platform sandbox` | `turbo sandbox --filter=@amplify-todo/platform` |
+| Todo outputs | `npm run generate-outputs:todo` | `pnpm --filter @amplify-todo/todo-backend generate-outputs` | `turbo generate-outputs --filter=@amplify-todo/todo-backend` |
+| Platform outputs | `npm run generate-outputs:platform` | `pnpm --filter @amplify-todo/platform generate-outputs` | `turbo generate-outputs --filter=@amplify-todo/platform` |
+| Preview (prod build) | `npm run preview` | `pnpm --filter @amplify-todo/todo-app preview` | `turbo preview` |
