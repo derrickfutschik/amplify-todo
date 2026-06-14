@@ -7,9 +7,6 @@
     "sandbox:delete": "ampx sandbox delete",
     "generate-outputs": "ampx generate outputs"
   },
-  "exports": {
-    "./amplify/auth/resource": "./amplify/auth/resource.ts"
-  },
   "dependencies": {
     "aws-cdk-lib": "^2.152.0",
     "constructs": "^10.0.0"

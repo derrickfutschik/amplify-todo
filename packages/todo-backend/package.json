@@ -8,7 +8,7 @@
     "generate-outputs": "ampx generate outputs"
   },
   "dependencies": {
-    "@amplify-todo/platform": "*",
+    "@aws-sdk/client-ssm": "^3.0.0",
     "aws-cdk-lib": "^2.152.0",
     "constructs": "^10.0.0"
   },

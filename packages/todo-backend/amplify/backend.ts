@@ -1,15 +1,19 @@
-import { defineBackend } from '@aws-amplify/backend';
-import { auth } from '@amplify-todo/platform/amplify/auth/resource';
+import { defineBackend, referenceAuth } from '@aws-amplify/backend';
+import { GetParameterCommand, SSMClient } from '@aws-sdk/client-ssm';
 import { data } from './data/resource';
 
-// todo-backend: re-uses the shared auth definition from platform so
-// Amplify creates/updates auth with the same config, then adds todo-specific
-// data resources on top.
-//
-// Deployment rules:
-//   platform     →  deploy from main/release only (auth is a shared resource)
-//   todo-backend →  deploy from any branch (data schema evolves per feature)
-defineBackend({
-  auth,
-  data,
+const ssm = new SSMClient({});
+const { Parameter } = await ssm.send(
+  new GetParameterCommand({ Name: '/derrops/amplify-todo/platform' })
+);
+const { auth: platformAuth } = JSON.parse(Parameter!.Value!);
+
+const auth = referenceAuth({
+  userPoolId: platformAuth.userPoolId,
+  userPoolClientId: platformAuth.userPoolClientId,
+  identityPoolId: platformAuth.identityPoolId,
+  authRoleArn: platformAuth.authRoleArn,
+  unauthRoleArn: platformAuth.unauthRoleArn,
 });
+
+defineBackend({ auth, data });
