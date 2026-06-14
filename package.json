@@ -13,7 +13,9 @@
     "sandbox:platform": "turbo sandbox --filter=@amplify-todo/platform",
     "sandbox:todo": "turbo sandbox --filter=@amplify-todo/todo-backend",
     "generate-outputs:platform": "turbo generate-outputs --filter=@amplify-todo/platform",
-    "generate-outputs:todo": "turbo generate-outputs --filter=@amplify-todo/todo-backend"
+    "generate-outputs:todo": "turbo generate-outputs --filter=@amplify-todo/todo-backend",
+    "bootstrap:deploy": "turbo deploy --filter=@amplify-todo/bootstrap",
+    "bootstrap:diff": "turbo diff --filter=@amplify-todo/bootstrap"
   },
   "devDependencies": {
     "turbo": "^2.3.0"

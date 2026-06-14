@@ -52,6 +52,25 @@ importers:
         specifier: ^5.4.0
         version: 5.4.21
 
+  packages/bootstrap:
+    dependencies:
+      aws-cdk-lib:
+        specifier: ^2.152.0
+        version: 2.259.0(constructs@10.6.0)
+      constructs:
+        specifier: ^10.0.0
+        version: 10.6.0
+    devDependencies:
+      aws-cdk:
+        specifier: ^2.152.0
+        version: 2.1126.0
+      tsx:
+        specifier: ^4.17.0
+        version: 4.22.4
+      typescript:
+        specifier: ^5.5.0
+        version: 5.9.3
+
   packages/platform:
     dependencies:
       aws-cdk-lib:
@@ -5600,6 +5619,12 @@ packages:
       - table
       - yaml
       - mime-types
+
+  /aws-cdk@2.1126.0:
+    resolution: {integrity: sha512-uNoocb3vCPiAT3j9+SwL6pn/VVggHWBsgC2XpxyhNvYQYt6cE9BM/149GWwtdcwnLrPjnwW1+CV/5nSSh5dV+w==}
+    engines: {node: '>= 18.0.0'}
+    hasBin: true
+    dev: true
 
   /b4a@1.8.1:
     resolution: {integrity: sha512-aiqre1Nr0B/6DgE2N5vwTc+2/oQZ4Wh1t4NznYY4E00y8LCt6NqdRv81so00oo27D8MVKTpUa/MwUUtBLXCoDw==}

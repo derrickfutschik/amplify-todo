@@ -19,6 +19,15 @@
       "cache": false,
       "outputs": ["amplify_outputs.json"]
     },
+    "deploy": {
+      "cache": false
+    },
+    "diff": {
+      "cache": false
+    },
+    "synth": {
+      "cache": false
+    },
     "preview": {
       "dependsOn": ["build"],
       "cache": false,

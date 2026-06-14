@@ -31,3 +31,7 @@ yarn-error.log*
 .amplify/
 amplify_outputs*
 amplifyconfiguration*
+
+# cdk — synthesized output and staging assets
+cdk.out/
+cdk.context.json
