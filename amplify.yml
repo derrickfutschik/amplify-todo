@@ -10,7 +10,7 @@ applications:
           commands:
             - npm install -g pnpm
             - pnpm install
-            - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
+            - pnpm exec ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
     frontend:
       phases:
         build:
@@ -31,7 +31,7 @@ applications:
           commands:
             - npm install -g pnpm
             - pnpm install
-            - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
+            - pnpm exec ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
     frontend:
       phases:
         build:
@@ -53,7 +53,7 @@ applications:
             - npm install -g pnpm
             - pnpm install
             # Pull todo-backend outputs (includes auth + data config)
-            - npx ampx generate outputs --branch $AWS_BRANCH --app-id $TODO_BACKEND_APP_ID --out-dir ../../packages/todo-backend
+            - pnpm exec ampx generate outputs --branch $AWS_BRANCH --app-id $TODO_BACKEND_APP_ID --out-dir ../../packages/todo-backend
         build:
           commands:
             - npm run build -w apps/todo-app
