@@ -14,7 +14,7 @@ applications:
       phases:
         build:
           commands:
-            - mkdir -p .noop
+            - mkdir -p .noop && echo "backend-only" > .noop/index.html
       artifacts:
         baseDirectory: .noop
         files:
@@ -34,7 +34,7 @@ applications:
       phases:
         build:
           commands:
-            - mkdir -p .noop
+            - mkdir -p .noop && echo "backend-only" > .noop/index.html
       artifacts:
         baseDirectory: .noop
         files:
