@@ -25,6 +25,6 @@
     "typescript": "^5.5.0"
   },
   "dependencies": {
-    "derrops-conventions": "^0.1.5"
+    "derrops-conventions": "^0.1.6"
   }
 }
