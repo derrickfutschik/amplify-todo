@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       derrops-conventions:
-        specifier: ^0.1.4
-        version: 0.1.4
+        specifier: ^0.1.5
+        version: 0.1.5
     devDependencies:
       '@aws-amplify/backend-cli':
         specifier: ^1.4.0
@@ -96,8 +96,8 @@ importers:
         specifier: ^10.0.0
         version: 10.6.0
       derrops-conventions:
-        specifier: ^0.1.4
-        version: 0.1.4
+        specifier: ^0.1.5
+        version: 0.1.5
     devDependencies:
       typescript:
         specifier: ^5.5.0
@@ -6189,8 +6189,8 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /derrops-conventions@0.1.4:
-    resolution: {integrity: sha512-ssaPArw8yQZfXxnyYSmGCDI++he4Z+1pRvL16Qn391L2W+WESKqi/W/pPyRT7vN6sKgp5eFby46G+yCnnkx0bQ==}
+  /derrops-conventions@0.1.5:
+    resolution: {integrity: sha512-QQugO2GXrcz+Q8Fg0Crpfpe3gx1ckoiya8lub40qHwnkpd/b2Dv1QNEt7r4uRc4pX4gOHsSwVPBZi7BB4y4CrQ==}
     engines: {node: '>=18.17'}
     dev: false
 
