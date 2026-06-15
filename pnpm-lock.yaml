@@ -18,8 +18,8 @@ importers:
   .:
     dependencies:
       derrops-conventions:
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.1.1
+        version: 0.1.1
     devDependencies:
       '@types/node':
         specifier: ^20.0.0
@@ -102,8 +102,8 @@ importers:
         specifier: ^10.0.0
         version: 10.6.0
       derrops-conventions:
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.1.1
+        version: 0.1.1
     devDependencies:
       typescript:
         specifier: ^5.5.0
@@ -5961,8 +5961,8 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /derrops-conventions@0.1.0:
-    resolution: {integrity: sha512-Tsr48ZbTVQ9mStapP7caF04TpMh1RyMWrJ+Sjb4AvmZ6DhxVGRtym5kDfl7Zdi23rqDCGPYLngV2R9pDOyU0Uw==}
+  /derrops-conventions@0.1.1:
+    resolution: {integrity: sha512-AYXfAD61V1VuZj2yhIBjMwqzuCFuEF9GIzZyNRysPbRbrYeezChBF8kqgtKhXdbbb46gQ1Odf6HZSYEuCvGS0A==}
     engines: {node: '>=18.17'}
     dev: false
 
