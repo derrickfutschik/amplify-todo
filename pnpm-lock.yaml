@@ -92,9 +92,22 @@ importers:
 
   packages/common:
     dependencies:
+      '@aws-sdk/client-ssm':
+        specifier: ^3.0.0
+        version: 3.1068.0
+      aws-cdk-lib:
+        specifier: ^2.152.0
+        version: 2.259.0(constructs@10.6.0)
+      constructs:
+        specifier: ^10.0.0
+        version: 10.6.0
       derrops-conventions:
         specifier: ^0.1.0
         version: 0.1.0
+    devDependencies:
+      typescript:
+        specifier: ^5.5.0
+        version: 5.9.3
 
   packages/platform:
     dependencies:
@@ -2327,7 +2340,7 @@ packages:
     engines: {node: '>=20.0.0'}
     dependencies:
       '@smithy/types': 4.14.4
-      fast-xml-parser: 5.7.3
+      fast-xml-parser: 5.8.0
       tslib: 2.8.1
 
   /@aws/lambda-invoke-store@0.2.4:
@@ -6252,15 +6265,6 @@ packages:
       path-expression-matcher: 1.5.0
       xml-naming: 0.1.0
 
-  /fast-xml-parser@5.7.3:
-    resolution: {integrity: sha512-C0AaNuC+mscy6vrAQKAc/rMq+zAPHodfHGZu4sGVehvAQt/JLG1O5zEcYcXSY5zSqr4YVgxsB+pHXTq0i7eDlg==}
-    hasBin: true
-    dependencies:
-      '@nodable/entities': 2.2.0
-      fast-xml-builder: 1.2.0
-      path-expression-matcher: 1.5.0
-      strnum: 2.4.0
-
   /fast-xml-parser@5.8.0:
     resolution: {integrity: sha512-6bIM7fsJxeo3uXv7OncQYsBAMPJ7V16Slahl/6M98C/i2q+vB1+4a0MtrvYwDFEUrwDSbAmeLDRXsOBwrL7yAg==}
     hasBin: true
@@ -6270,7 +6274,6 @@ packages:
       path-expression-matcher: 1.5.0
       strnum: 2.4.0
       xml-naming: 0.1.0
-    dev: false
 
   /fastq@1.20.1:
     resolution: {integrity: sha512-GGToxJ/w1x32s/D2EKND7kTil4n8OVk/9mycTc4VDza13lOvpUZTGX3mFSCtV9ksdGBVzvsyAVLM6mHFThxXxw==}

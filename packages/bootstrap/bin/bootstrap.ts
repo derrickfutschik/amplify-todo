@@ -7,7 +7,7 @@ const app = new cdk.App();
 
 export const bootstrapConvention = convention.with({ domain: 'bootstrap', service: 'amplify' })
 
-new BootstrapStack(app, bootstrapConvention.name({ type: 'stack' }), {
+new BootstrapStack(app, bootstrapConvention.name({ type: 'cloudFormationStack' }), {
   env: {
     account: process.env.CDK_DEFAULT_ACCOUNT,
     region: process.env.CDK_DEFAULT_REGION,

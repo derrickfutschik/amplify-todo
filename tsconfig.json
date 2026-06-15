@@ -9,7 +9,8 @@
     "skipLibCheck": true,
     "paths": {
       "@platform/*": ["./packages/platform/*"],
-      "@todo-backend/*": ["./packages/todo-backend/*"]
+      "@todo-backend/*": ["./packages/todo-backend/*"],
+      "derrops-conventions": ["./node_modules/derrops-conventions/src/index.ts"]
     }
   }
 }

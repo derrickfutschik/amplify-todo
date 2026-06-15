@@ -4,16 +4,27 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 import { PLATFORM_SSM_PARAM } from '@amplify-todo/common';
 import { convention } from '@amplify-todo/common';
+import { DerropsStack } from '@amplify-todo/common';
 
-const todoConvention = convention.with({ domain: 'todo', service: 'backend' })
+
+const mainGitBranch = "main"
+
 
 interface BootstrapStackProps extends cdk.StackProps {
   domainName?: string;
 }
 
-export class BootstrapStack extends cdk.Stack {
+
+export class BootstrapStack extends DerropsStack {
   constructor(scope: Construct, id: string, props?: BootstrapStackProps) {
-    super(scope, id, props);
+    const conventions = convention.with({ domain: 'bootstrap', service: 'amplify' })
+    // super(scope, id, props);
+    super({
+      conventions: convention,
+      scope: scope,
+      id: id,
+      props: props,
+    });
 
     const serviceRole = new iam.Role(this, 'AmplifyServiceRole', {
       assumedBy: new iam.ServicePrincipal('amplify.amazonaws.com'),
@@ -36,7 +47,8 @@ export class BootstrapStack extends cdk.Stack {
 
     // Platform — auth + shared infra, main branch only
     const platformApp = new amplify.CfnApp(this, 'PlatformApp', {
-      name: platformConvention.name({ type: 'cloudFormationStack' }),
+      // name: conventions.name({ type: 'cloudFormationStack' }),
+      name: conventions.name({ type: 'cloudFormationStack' }),
       iamServiceRole: serviceRole.roleArn,
       environmentVariables: [
         { name: 'AMPLIFY_MONOREPO_APP_ROOT', value: 'packages/platform' },
@@ -45,13 +57,13 @@ export class BootstrapStack extends cdk.Stack {
 
     new amplify.CfnBranch(this, 'PlatformMainBranch', {
       appId: platformApp.attrAppId,
-      branchName: 'main',
+      branchName: mainGitBranch,
       enableAutoBuild: true,
     });
 
     // Todo-backend — data layer, any branch
     const todoBackendApp = new amplify.CfnApp(this, 'TodoBackendApp', {
-      name: todoConvention.with({ service: 'backend' }).name({ type: 'cloudFormationStack' }),
+      name: convention.with({ service: 'backend' }).name({ type: 'cloudFormationStack' }),
       iamServiceRole: serviceRole.roleArn,
       environmentVariables: [
         { name: 'AMPLIFY_MONOREPO_APP_ROOT', value: 'packages/todo-backend' },
@@ -60,13 +72,13 @@ export class BootstrapStack extends cdk.Stack {
 
     new amplify.CfnBranch(this, 'TodoBackendMainBranch', {
       appId: todoBackendApp.attrAppId,
-      branchName: 'main',
+      branchName: mainGitBranch,
       enableAutoBuild: true,
     });
 
     // Todo-app — frontend, TODO_BACKEND_APP_ID resolved from this stack
     const todoApp = new amplify.CfnApp(this, 'TodoApp', {
-      name: todoConvention.with({ service: 'frontend' }).name({ type: 'cloudFormationStack' }),
+      name: convention.with({ service: 'frontend' }).name({ type: 'cloudFormationStack' }),
       iamServiceRole: serviceRole.roleArn,
       environmentVariables: [
         { name: 'AMPLIFY_MONOREPO_APP_ROOT', value: 'apps/todo-app' },
@@ -76,7 +88,7 @@ export class BootstrapStack extends cdk.Stack {
 
     const todoAppMainBranch = new amplify.CfnBranch(this, 'TodoAppMainBranch', {
       appId: todoApp.attrAppId,
-      branchName: 'main',
+      branchName: mainGitBranch,
       enableAutoBuild: true,
     });
 
