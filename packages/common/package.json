@@ -2,7 +2,14 @@
   "name": "@amplify-todo/common",
   "version": "1.0.0",
   "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
   "exports": {
     ".": "./src/index.ts"
-  }
+  },
+  "dependencies": {
+    "derrops-conventions": "^0.1.0"
+  },
+  "devDependencies": {}
 }

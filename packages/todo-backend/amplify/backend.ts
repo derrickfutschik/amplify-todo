@@ -1,10 +1,11 @@
 import { defineBackend, referenceAuth } from '@aws-amplify/backend';
 import { GetParameterCommand, SSMClient } from '@aws-sdk/client-ssm';
 import { data } from './data/resource';
+import { PLATFORM_SSM_PARAM } from '@amplify-todo/common';
 
 const ssm = new SSMClient({});
 const { Parameter } = await ssm.send(
-  new GetParameterCommand({ Name: '/derrops/amplify-todo/platform' })
+  new GetParameterCommand({ Name: PLATFORM_SSM_PARAM })
 );
 const { auth: platformAuth } = JSON.parse(Parameter!.Value!);
 

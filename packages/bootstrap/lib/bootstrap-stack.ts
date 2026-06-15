@@ -2,6 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import * as amplify from 'aws-cdk-lib/aws-amplify';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
+import { platformConvention, todoConvention, PLATFORM_SSM_PARAM } from '@amplify-todo/common';
 
 interface BootstrapStackProps extends cdk.StackProps {
   domainName?: string;
@@ -22,7 +23,7 @@ export class BootstrapStack extends cdk.Stack {
             new iam.PolicyStatement({
               actions: ['ssm:GetParameter'],
               resources: [
-                `arn:aws:ssm:*:${this.account}:parameter/derrops/amplify-todo/platform`,
+                `arn:aws:ssm:*:${this.account}:parameter${PLATFORM_SSM_PARAM}`,
               ],
             }),
           ],
@@ -32,7 +33,7 @@ export class BootstrapStack extends cdk.Stack {
 
     // Platform — auth + shared infra, main branch only
     const platformApp = new amplify.CfnApp(this, 'PlatformApp', {
-      name: 'amplify-todo-platform',
+      name: platformConvention.name({ type: 'cloudFormationStack' }),
       iamServiceRole: serviceRole.roleArn,
       environmentVariables: [
         { name: 'AMPLIFY_MONOREPO_APP_ROOT', value: 'packages/platform' },
@@ -47,7 +48,7 @@ export class BootstrapStack extends cdk.Stack {
 
     // Todo-backend — data layer, any branch
     const todoBackendApp = new amplify.CfnApp(this, 'TodoBackendApp', {
-      name: 'amplify-todo-backend',
+      name: todoConvention.with({ service: 'backend' }).name({ type: 'cloudFormationStack' }),
       iamServiceRole: serviceRole.roleArn,
       environmentVariables: [
         { name: 'AMPLIFY_MONOREPO_APP_ROOT', value: 'packages/todo-backend' },
@@ -62,7 +63,7 @@ export class BootstrapStack extends cdk.Stack {
 
     // Todo-app — frontend, TODO_BACKEND_APP_ID resolved from this stack
     const todoApp = new amplify.CfnApp(this, 'TodoApp', {
-      name: 'amplify-todo-app',
+      name: todoConvention.with({ service: 'frontend' }).name({ type: 'cloudFormationStack' }),
       iamServiceRole: serviceRole.roleArn,
       environmentVariables: [
         { name: 'AMPLIFY_MONOREPO_APP_ROOT', value: 'apps/todo-app' },
