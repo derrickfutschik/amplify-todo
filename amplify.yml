@@ -8,9 +8,8 @@ applications:
       phases:
         build:
           commands:
-            - npm install -g pnpm tsdown
+            - npm install -g pnpm
             - pnpm install
-            - node -e "const {execSync}=require('child_process'),{dirname}=require('path');execSync('tsdown src/index.ts --format esm,cjs --dts --clean',{cwd:dirname(require.resolve('derrops-conventions/package.json')),stdio:'inherit'})"
             - pnpm exec ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
     frontend:
       phases:
@@ -30,9 +29,8 @@ applications:
       phases:
         build:
           commands:
-            - npm install -g pnpm tsdown
+            - npm install -g pnpm
             - pnpm install
-            - node -e "const {execSync}=require('child_process'),{dirname}=require('path');execSync('tsdown src/index.ts --format esm,cjs --dts --clean',{cwd:dirname(require.resolve('derrops-conventions/package.json')),stdio:'inherit'})"
             - pnpm exec ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
     frontend:
       phases:
