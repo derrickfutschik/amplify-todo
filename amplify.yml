@@ -9,6 +9,15 @@ applications:
         build:
           commands:
             - npm ci
+    frontend:
+      phases:
+        build:
+          commands:
+            - echo "backend only"
+      artifacts:
+        baseDirectory: /tmp
+        files:
+          - '**/*'
 
   # ── Todo backend (data models) ───────────────────────────────────────────────
   # Per-feature resources. Deploy from any branch.
@@ -19,6 +28,15 @@ applications:
         build:
           commands:
             - npm ci
+    frontend:
+      phases:
+        build:
+          commands:
+            - echo "backend only"
+      artifacts:
+        baseDirectory: /tmp
+        files:
+          - '**/*'
 
   # ── Frontend ─────────────────────────────────────────────────────────────────
   # In the Amplify console: New app → appRoot = apps/todo-app
