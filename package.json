@@ -24,7 +24,7 @@
     "typescript": "^5.5.0"
   },
   "dependencies": {
-    "derrops-conventions": "^0.1.1"
+    "derrops-conventions": "^0.1.4"
   },
   "pnpm": {
     "overrides": {

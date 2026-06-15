@@ -8,8 +8,9 @@ applications:
       phases:
         build:
           commands:
-            - npm install -g pnpm
+            - npm install -g pnpm tsdown
             - pnpm install
+            - (cd node_modules/derrops-conventions && tsdown src/index.ts --format esm,cjs --dts --clean)
             - pnpm exec ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
     frontend:
       phases:
@@ -29,8 +30,9 @@ applications:
       phases:
         build:
           commands:
-            - npm install -g pnpm
+            - npm install -g pnpm tsdown
             - pnpm install
+            - (cd node_modules/derrops-conventions && tsdown src/index.ts --format esm,cjs --dts --clean)
             - pnpm exec ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
     frontend:
       phases:
