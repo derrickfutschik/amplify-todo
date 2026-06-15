@@ -14,9 +14,9 @@ applications:
       phases:
         build:
           commands:
-            - echo "backend only"
+            - mkdir -p .noop
       artifacts:
-        baseDirectory: /tmp
+        baseDirectory: .noop
         files:
           - '**/*'
 
@@ -34,9 +34,9 @@ applications:
       phases:
         build:
           commands:
-            - echo "backend only"
+            - mkdir -p .noop
       artifacts:
-        baseDirectory: /tmp
+        baseDirectory: .noop
         files:
           - '**/*'
 
