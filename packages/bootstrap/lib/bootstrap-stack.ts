@@ -2,7 +2,10 @@ import * as cdk from 'aws-cdk-lib';
 import * as amplify from 'aws-cdk-lib/aws-amplify';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
-import { platformConvention, todoConvention, PLATFORM_SSM_PARAM } from '@amplify-todo/common';
+import { PLATFORM_SSM_PARAM } from '@amplify-todo/common';
+import { convention } from '@amplify-todo/common';
+
+const todoConvention = convention.with({ domain: 'todo', service: 'backend' })
 
 interface BootstrapStackProps extends cdk.StackProps {
   domainName?: string;

@@ -1,11 +1,13 @@
 import * as cdk from 'aws-cdk-lib';
 import { BootstrapStack } from '../lib/bootstrap-stack.js';
 
-import { bootstrapConvention } from '@amplify-todo/common';
+import { convention } from '@amplify-todo/common';
 
 const app = new cdk.App();
 
-new BootstrapStack(app, bootstrapConvention.name({ type: 'cloudFormationStack' }), {
+export const bootstrapConvention = convention.with({ domain: 'bootstrap', service: 'amplify' })
+
+new BootstrapStack(app, bootstrapConvention.name({ type: 'stack' }), {
   env: {
     account: process.env.CDK_DEFAULT_ACCOUNT,
     region: process.env.CDK_DEFAULT_REGION,

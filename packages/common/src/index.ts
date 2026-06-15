@@ -7,15 +7,11 @@ export const convention = new DerropsConventions({ org: 'derrops', env, region }
   .tagPrefix('derrops:')
   .tagKeys('org', 'domain', 'service')
   .domains({
-    bootstrap: [] as const,
+    bootstrap: ['amplify'] as const,
     platform: ['auth'] as const,
     todo: ['backend', 'frontend'] as const,
   })
 
-export const platformConvention = convention.with({ domain: 'platform', service: 'auth' })
-export const bootstrapConvention = convention.with({ domain: 'bootstrap' })
-export const todoConvention = convention.with({ domain: 'todo' })
-
 // SSM param path shared between platform (writer) and todo-backend (reader)
-export const PLATFORM_SSM_PARAM = platformConvention.name({ type: 'ssmParam' })
+export const PLATFORM_SSM_PARAM = convention.with({ domain: 'bootstrap', service: 'amplify' }).name({ type: 'ssmParam' })
 
