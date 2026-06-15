@@ -8,7 +8,8 @@ applications:
       phases:
         build:
           commands:
-            - npm ci
+            - npm install -g pnpm
+            - pnpm install
     frontend:
       phases:
         build:
@@ -27,7 +28,8 @@ applications:
       phases:
         build:
           commands:
-            - npm ci
+            - npm install -g pnpm
+            - pnpm install
     frontend:
       phases:
         build:
@@ -46,7 +48,8 @@ applications:
       phases:
         preBuild:
           commands:
-            - npm ci
+            - npm install -g pnpm
+            - pnpm install
             # Pull todo-backend outputs (includes auth + data config)
             - npx ampx generate outputs --branch $AWS_BRANCH --app-id $TODO_BACKEND_APP_ID --out-dir ../../packages/todo-backend
         build:
